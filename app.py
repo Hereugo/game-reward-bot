@@ -27,10 +27,10 @@ def getMessage():
 	bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
 	return "!", 200
 
-@app.route('/<userId>', methods=['GET'])
-def sendForm(userId):
-	bot.send_message(userId, tree.form.text)
-	return "Good!", 200
+# @app.route('/<userId>', methods=['GET'])
+# def sendForm(userId):
+# 	bot.send_message(userId, tree.form.text)
+# 	return "Good!", 200
 
 @app.route('/')
 def webhook():
