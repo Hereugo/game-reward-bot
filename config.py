@@ -1,7 +1,7 @@
 from functions import Map 
 from PIL import Image
 TOKEN = '1272925344:AAGArvS0kwYUB8W0wL3EufrsGn8kNRGar9w'
-URL = ''
+URL = 'https://work-dad.herokuapp.com/'
 
 tree = Map({
 	'menu': {
