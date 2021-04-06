@@ -88,7 +88,7 @@ def form(message, values):
 	elif values[2] == 'toy_choice':
 		tempMem['toy_choice'] = int(values[1])
 
-	print('HELLO???????????????')
+	print(tempMem)
 	if stage == '0': # Get name and surname
 		msg = bot.send_message(userId, tree.form.stages[0].text)
 		bot.register_next_step_handler(msg, lambda m: form(m, ['1', '#', 'name']))
@@ -96,7 +96,7 @@ def form(message, values):
 		msg = bot.send_message(userId, tree.form.stages[1].text[0])
 		bot.register_next_step_handler(msg, lambda m: form(m, ['2', '0', 'check']))
 	elif stage == '2': # Get toy choice
-		index = int(value[1])
+		index = int(values[1])
 		currentInlineState = [
 			{'type': 'callback', 'texts':[''], 'callbacks':[max(index - 1, 0)]},
 			{'type': 'callback', 'texts':[''], 'callbacks':[min(index + 1, len(tree.stage[2].imgs) - 1)]},
