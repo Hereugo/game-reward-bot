@@ -2,7 +2,7 @@ import re
 import os
 
 import telebot
-from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, InputMediaPhoto
 
 from config import *
 from flask import Flask, jsonify, request
@@ -19,6 +19,8 @@ keyFormat = {
 	'urls': [],
 }
 
+tempMem = {}
+
 
 @app.route('/'+TOKEN, methods=['POST'])
 def getMessage():
@@ -29,8 +31,10 @@ def getMessage():
 
 @app.route('/<userId>', methods=['GET'])
 def sendForm(userId):
-	bot.send_message(userId, tree.form.text)
-	return "Good!", 200
+	currentInlineState = [keyFormat]
+	keyboard = create_keyboard(tree.form.buttons, currentInlineState)
+	bot.send_message(userId, tree.form.text, reply_markup=keyboard)
+	return "Form started!", 200
 
 @app.route('/')
 def webhook():
@@ -65,6 +69,59 @@ def menu(message):
 	keyboard = create_keyboard(tree.menu.buttons, currentInlineState)
 	bot.send_message(userId, tree.menu.text, reply_markup=keyboard)
 
+## <============================ FORM ====================================>
+
+def form(message, values):
+	userId = message.chat.id
+	stage = values[0]
+
+	# values to store
+	if values[2] == 'name':
+		tempMem['name'] = message.text
+	elif values[2] == 'check':
+		if message.content_type != 'photo':
+			msg = bot.send_message(userId, tree.stage[1].text[1])
+			bot.register_next_step_handler(msg, lambda m: form(m, ['2', '0', 'name']))
+			return
+		tempMem['photo_check'] = message.message_id
+	elif values[2] == 'toy_choice':
+		tempMem['toy_choice'] = int(values[1])
+
+
+	if stage == '0': # Get name and surname
+		msg = bot.send_message(userId, tree.stage[0].text)
+		bot.register_next_step_handler(msg, lambda m: form(m, ['1', '#', 'name']))
+	elif stage == '1': # Get check photo
+		msg = bot.send_message(userId, tree.stage[1].text[0])
+		bot.register_next_step_handler(msg, lambda m: form(m, ['2', '0', 'check']))
+	elif stage == '2': # Get toy choice
+		index = int(value[1])
+		currentInlineState = [
+			{'type': 'callback', 'texts':[''], 'callbacks':[max(index - 1, 0)]},
+			{'type': 'callback', 'texts':[''], 'callbacks':[min(index + 1, len(tree.stage[2].imgs) - 1)]},
+			{'type': 'callback', 'texts':[''], 'callbacks':[index]},
+		]
+		keyboard = create_keyboard(tree.stage[2].buttons, currentInlineState)
+		bot.send_message(userId, tree.stage[2].text, reply_markup=keyboard)
+	elif stage == '3': # Show selected things		
+		bot.send_photo(chat_id=userId, photo=tree.stage[2].imgs[tempMem['toy_choice']]) # Toy choice
+		bot.forward_message(userId, userId, tempMem['photo_check'])						# Check
+
+		currentInlineState = [keyFormat, keyFormat]										# Confirmation message
+		keyboard = create_keyboard(tree.stage[3].buttons, currentInlineState)
+		bot.send_message(userId, tree.stage[3].text.format(tempMem['name']), reply_markup=keyboard)
+	elif stage == '4': # Confirmed
+		currentInlineState = [keyFormat]
+		keyboard = create_keyboard(tree.stage[4].buttons, currentInlineState)
+		bot.send_message(userId, tree.stage[4].text, reply_markup=keyboard)
+
+
+		bot.forward_message(groupChatId, userId, message.message_id)
+		currentInlineState = [{'type': 'callback', 'texts':[''], 'callbacks':[userId]},
+							  {'type': 'callback', 'texts':[''], 'callbacks':[userId]}]
+		keyboard = create_keyboard(tree.confirmation.buttons, currentInlineState)
+		bot.send_message(groupChatId, tree.confirmation.text.format(message.chat.username), reply_markup=keyboard)
+## <======================================================================>
 
 
 ## <======================== LIST GAMES ==================================>
@@ -81,35 +138,6 @@ def list_games(message, value):
 				   photo=tree.list_games.messages[value].image, 
 				   caption=tree.list_games.messages[value].text, 
 				   reply_markup=keyboard)
-## <======================================================================>
-
-
-
-## <========================== GET CHECK =================================>
-def get_check(message):
-	userId = message.chat.id
-	msg = bot.send_message(userId, tree.get_check.text[0])
-	bot.register_next_step_handler(msg, recieved_check)
-def recieved_check(message):
-	userId = message.chat.id
-
-	# check if its a photo
-	if message.content_type != 'photo':
-		msg = bot.send_message(userId, tree.get_check.text[1])
-		bot.register_next_step_handler(msg, recieved_check)
-		return
-	currentInlineState = [keyFormat]
-	keyboard = create_keyboard(tree.get_check.buttons, currentInlineState)
-	bot.send_message(userId, tree.get_check.text[2], reply_markup=keyboard)
-
-	bot.forward_message(groupChatId, userId, message.message_id)
-
-	currentInlineState = [{'type': 'callback', 'texts':[''], 'callbacks':[userId]},
-						  {'type': 'callback', 'texts':[''], 'callbacks':[userId]}]
-	keyboard = create_keyboard(tree.confirmation.buttons, currentInlineState)
-	# bot.edit_message_text(groupChatId, message.message_id, tree.confirmation.text.format(message.chat.username), reply_markup=keyboard )
-
-	bot.send_message(groupChatId, tree.confirmation.text.format(message.chat.username), reply_markup=keyboard)
 ## <======================================================================>
 
 
