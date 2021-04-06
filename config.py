@@ -158,11 +158,11 @@ tree = Map({
 					[
 						{
 							'text': '<',
-							'callback': 'form?2,{}'
+							'callback': 'form?2,{},#'
 						},
 						{
 							'text': '>',
-							'callback': 'form?2,{}',
+							'callback': 'form?2,{},#',
 						}
 					],
 					[
@@ -179,13 +179,13 @@ tree = Map({
 					[
 						{
 							'text': 'Потвиредить',
-							'callback': 'form?4',
+							'callback': 'form?4,#,#',
 						}
 					],
 					[
 						{
 							'text': 'Поменять',
-							'callback': 'form?0',
+							'callback': 'form?0,#,#',
 						}
 					]
 				]
@@ -206,7 +206,7 @@ tree = Map({
 			[
 				{
 					'text': 'Начать',
-					'callback': 'form?0',
+					'callback': 'form?0,#,#',
 				}
 			]
 		]
