@@ -20,7 +20,7 @@ keyFormat = {
 }
 
 tempMem = {}
-
+function_name = '#'
 
 @app.route('/'+TOKEN, methods=['POST'])
 def getMessage():
@@ -72,6 +72,21 @@ def menu(message):
 
 ## <============================ FORM ====================================>
 
+
+@bot.message_handler(func=lambda m: True)
+def receiver(message):
+	if function_name != '#':
+		[query, values] = calc(function_name)
+		function_name = '#'
+
+		possibles = globals().copy()
+		possibles.update(locals())
+		method = possibles.get(query)
+		if value == -1:
+			method(message)
+		else:
+			method(message, value)
+
 def form(message, values):
 	userId = message.chat.id
 	stage = values[0]
@@ -82,7 +97,7 @@ def form(message, values):
 	elif values[2] == 'check':
 		if message.content_type != 'photo':
 			msg = bot.send_message(userId, tree.form.stages[1].text[1])
-			bot.register_next_step_handler(msg, lambda m: form(m, ['2', '0', 'name']))
+			function_name = 'form?2,0,check'
 			return
 		tempMem['photo_check'] = message.message_id
 	elif values[2] == 'toy_choice':
@@ -91,10 +106,12 @@ def form(message, values):
 	print(tempMem)
 	if stage == '0': # Get name and surname
 		msg = bot.send_message(userId, tree.form.stages[0].text)
-		bot.register_next_step_handler(msg, lambda m: form(m, ['1', '#', 'name']))
+		function_name = 'form?1,#,name'
+
 	elif stage == '1': # Get check photo
 		msg = bot.send_message(userId, tree.form.stages[1].text[0])
-		bot.register_next_step_handler(msg, lambda m: form(m, ['2', '0', 'check']))
+		function_name = 'form?2,0,check'
+
 	elif stage == '2': # Get toy choice
 		index = int(values[1])
 		currentInlineState = [
