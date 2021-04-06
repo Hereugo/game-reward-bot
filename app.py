@@ -75,7 +75,7 @@ def menu(message):
 def form(message, values):
 	userId = message.chat.id
 	stage = values[0]
-
+	print(values, 'HERE!!!!!!!!!!!!!!!!!!!!!!!!!')
 	# values to store
 	if values[2] == 'name':
 		tempMem['name'] = message.text
