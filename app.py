@@ -75,6 +75,7 @@ def menu(message):
 
 @bot.message_handler(func=lambda m: True)
 def receiver(message):
+	print('I received your message just cant say that')
 	fname = globals()['function_name']
 	if fname != '#':
 		[query, values] = calc(fname)
