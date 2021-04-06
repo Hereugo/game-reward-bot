@@ -31,6 +31,7 @@ def getMessage():
 
 @app.route('/<userId>', methods=['GET'])
 def sendForm(userId):
+	print(userId)
 	currentInlineState = [keyFormat]
 	keyboard = create_keyboard(tree.form.buttons, currentInlineState)
 	bot.send_message(int(userId), tree.form.text, reply_markup=keyboard)
