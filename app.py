@@ -33,7 +33,7 @@ def getMessage():
 def sendForm(userId):
 	currentInlineState = [keyFormat]
 	keyboard = create_keyboard(tree.form.buttons, currentInlineState)
-	bot.send_message(userId, tree.form.text, reply_markup=keyboard)
+	bot.send_message(int(userId), tree.form.text, reply_markup=keyboard)
 	return "Form started!", 200
 
 @app.route('/')
