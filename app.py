@@ -75,13 +75,13 @@ def menu(message):
 def form(message, values):
 	userId = message.chat.id
 	stage = values[0]
-	print(values, 'HERE!!!!!!!!!!!!!!!!!!!!!!!!!')
+	print(message, userId, values, 'HERE!!!!!!!!!!!!!!!!!!!!!!!!!')
 	# values to store
 	if values[2] == 'name':
 		tempMem['name'] = message.text
 	elif values[2] == 'check':
 		if message.content_type != 'photo':
-			msg = bot.send_message(userId, tree.stage[1].text[1])
+			msg = bot.send_message(userId, tree.form.stage[1].text[1])
 			bot.register_next_step_handler(msg, lambda m: form(m, ['2', '0', 'name']))
 			return
 		tempMem['photo_check'] = message.message_id
@@ -90,10 +90,10 @@ def form(message, values):
 
 
 	if stage == '0': # Get name and surname
-		msg = bot.send_message(userId, tree.stage[0].text)
+		msg = bot.send_message(userId, tree.form.stage[0].text)
 		bot.register_next_step_handler(msg, lambda m: form(m, ['1', '#', 'name']))
 	elif stage == '1': # Get check photo
-		msg = bot.send_message(userId, tree.stage[1].text[0])
+		msg = bot.send_message(userId, tree.form.stage[1].text[0])
 		bot.register_next_step_handler(msg, lambda m: form(m, ['2', '0', 'check']))
 	elif stage == '2': # Get toy choice
 		index = int(value[1])
@@ -102,20 +102,19 @@ def form(message, values):
 			{'type': 'callback', 'texts':[''], 'callbacks':[min(index + 1, len(tree.stage[2].imgs) - 1)]},
 			{'type': 'callback', 'texts':[''], 'callbacks':[index]},
 		]
-		keyboard = create_keyboard(tree.stage[2].buttons, currentInlineState)
-		bot.send_message(userId, tree.stage[2].text, reply_markup=keyboard)
+		keyboard = create_keyboard(tree.form.stage[2].buttons, currentInlineState)
+		bot.send_message(userId, tree.form.stage[2].text, reply_markup=keyboard)
 	elif stage == '3': # Show selected things		
-		bot.send_photo(chat_id=userId, photo=tree.stage[2].imgs[tempMem['toy_choice']]) # Toy choice
+		bot.send_photo(chat_id=userId, photo=tree.form.stage[2].imgs[tempMem['toy_choice']]) # Toy choice
 		bot.forward_message(userId, userId, tempMem['photo_check'])						# Check
 
 		currentInlineState = [keyFormat, keyFormat]										# Confirmation message
-		keyboard = create_keyboard(tree.stage[3].buttons, currentInlineState)
-		bot.send_message(userId, tree.stage[3].text.format(tempMem['name']), reply_markup=keyboard)
+		keyboard = create_keyboard(tree.form.stage[3].buttons, currentInlineState)
+		bot.send_message(userId, tree.form.stage[3].text.format(tempMem['name']), reply_markup=keyboard)
 	elif stage == '4': # Confirmed
 		currentInlineState = [keyFormat]
-		keyboard = create_keyboard(tree.stage[4].buttons, currentInlineState)
-		bot.send_message(userId, tree.stage[4].text, reply_markup=keyboard)
-
+		keyboard = create_keyboard(tree.form.stage[4].buttons, currentInlineState)
+		bot.send_message(userId, tree.form.stage[4].text, reply_markup=keyboard)
 
 		bot.forward_message(groupChatId, userId, message.message_id)
 		currentInlineState = [{'type': 'callback', 'texts':[''], 'callbacks':[userId]},
