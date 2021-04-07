@@ -77,6 +77,7 @@ def menu(message):
 def receiver(message):
 	print('I received your message just cant say that')
 	fname = globals()['function_name']
+	print(fname)
 	if fname != '#':
 		[query, values] = calc(fname)
 		globals()['function_name'] = '#'
