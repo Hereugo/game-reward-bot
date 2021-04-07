@@ -107,8 +107,7 @@ def form(message, values):
 		users.update_one({'_id': userId}, {'$set': {'name': message.text}})
 	elif values[2] == 'check':
 		if message.content_type != 'photo':
-			msg = bot.send_message(userId, tree.form.stages[1].text[1])
-			users.update_one({'_id': userId}, {'$set': {'function_name': 'form?2,0,check'}})
+			bot.send_message(userId, tree.form.stages[1].text[1])
 			return
 		users.update_one({'_id': userId}, {'$set': {'photo_check': message.message_id}})
 	elif values[2] == 'toy_choice':
@@ -148,7 +147,7 @@ def form(message, values):
 		keyboard = create_keyboard(tree.form.stages[4].buttons, currentInlineState)
 		bot.send_message(userId, tree.form.stages[4].text, reply_markup=keyboard)
 
-		bot.forward_message(groupChatId, userId, message.message_id)
+		bot.forward_message(groupChatId, userId, user['photo_check'])
 		currentInlineState = [{'type': 'callback', 'texts':[''], 'callbacks':[userId]},
 							  {'type': 'callback', 'texts':[''], 'callbacks':[userId]}]
 		keyboard = create_keyboard(tree.confirmation.buttons, currentInlineState)
