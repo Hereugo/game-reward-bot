@@ -79,8 +79,8 @@ def receiver(message):
 	print('I received your message just cant say that')
 	print(tempMem['function_name'])
 	if tempMem['function_name'] != '#':
-		[query, values] = calc(tempMem['functoin_name'])
-		tempMem['functoin_name'] = '#'
+		[query, values] = calc(tempMem['function_name'])
+		tempMem['function_name'] = '#'
 
 		possibles = globals().copy()
 		possibles.update(locals())
