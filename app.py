@@ -108,6 +108,7 @@ def form(message, values):
 	elif values[2] == 'check':
 		if message.content_type != 'photo':
 			bot.send_message(userId, tree.form.stages[1].text[1])
+			users.update_one({'_id': userId}, {'$set': {'function_name': 'form?2,0,check'}})
 			return
 		users.update_one({'_id': userId}, {'$set': {'photo_check': message.message_id}})
 	elif values[2] == 'toy_choice':

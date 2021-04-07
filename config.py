@@ -18,12 +18,6 @@ tree = Map({
 			],
 			[
 				{
-					'text': 'Загурзить чек',
-					'callback': 'get_check',
-				},
-			],
-			[
-				{
 					'text': 'Условия',
 					'callback': 'сonditions',
 				},
@@ -41,17 +35,17 @@ tree = Map({
 			{
 				'image': Image.open('./images/doodle_jump.png'),
 				'text': 'Это игра doodle jump, набирите 5000 очков чтобы получить приз!',
-				'url': 'https://doodle-jump.hereugo.repl.co/?{}',
+				'url': 'https://doodle-jump.hereugo.repl.co/?id={}',
 			},
 			{
 				'image': Image.open('./images/spiderman.png'),
 				'text': 'Интересная игра про spiderman-а пройдите 10000 метров чтобы получить приз!',
-				'url': 'https://spiderman.hereugo.repl.co/?{}',
+				'url': 'https://spiderman.hereugo.repl.co/?id={}',
 			},
 			{
 				'image': Image.open('./images/drovosek.png'),
 				'text': 'Любишь играть в игры? Если да то вам понравится drovosek срубите 500 деревьев чтобы получить приз!',
-				'url': 'https://drovosek.nomomon.repl.co/?{}',
+				'url': 'https://drovosek.nomomon.repl.co/?id={}',
 			}
 		],
 		'buttons': [
