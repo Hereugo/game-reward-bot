@@ -19,8 +19,9 @@ keyFormat = {
 	'urls': [],
 }
 
+
 tempMem = {}
-function_name = '#'
+tempMem['function_name'] = '#'
 
 @app.route('/'+TOKEN, methods=['POST'])
 def getMessage():
@@ -76,11 +77,10 @@ def menu(message):
 @bot.message_handler(func=lambda m: True)
 def receiver(message):
 	print('I received your message just cant say that')
-	fname = globals()['function_name']
-	print(fname)
-	if fname != '#':
-		[query, values] = calc(fname)
-		globals()['function_name'] = '#'
+	print(tempMem['function_name'])
+	if tempMem['function_name'] != '#':
+		[query, values] = calc(tempMem['functoin_name'])
+		tempMem['functoin_name'] = '#'
 
 		possibles = globals().copy()
 		possibles.update(locals())
@@ -88,7 +88,7 @@ def receiver(message):
 		if value == -1:
 			method(message)
 		else:
-			method(message, value)
+			method(message, values)
 
 def form(message, values):
 	userId = message.chat.id
@@ -100,7 +100,7 @@ def form(message, values):
 	elif values[2] == 'check':
 		if message.content_type != 'photo':
 			msg = bot.send_message(userId, tree.form.stages[1].text[1])
-			globals()['function_name'] = 'form?2,0,check'
+			tempMem['functoin_name'] = 'form?2,0,check'
 			return
 		tempMem['photo_check'] = message.message_id
 	elif values[2] == 'toy_choice':
@@ -109,11 +109,11 @@ def form(message, values):
 	print(tempMem, function_name)
 	if stage == '0': # Get name and surname
 		msg = bot.send_message(userId, tree.form.stages[0].text)
-		globals()['function_name'] = 'form?1,#,name'
+		tempMem['functoin_name'] = 'form?1,#,name'
 
 	elif stage == '1': # Get check photo
 		msg = bot.send_message(userId, tree.form.stages[1].text[0])
-		globals()['function_name'] = 'form?2,0,check'
+		tempMem['functoin_name'] = 'form?2,0,check'
 
 	elif stage == '2': # Get toy choice
 		index = int(values[1])
