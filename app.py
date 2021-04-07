@@ -119,7 +119,7 @@ def form(message, values):
 		index = int(values[1])
 		currentInlineState = [
 			{'type': 'callback', 'texts':[''], 'callbacks':[max(index - 1, 0)]},
-			{'type': 'callback', 'texts':[''], 'callbacks':[min(index + 1, len(tree.stage[2].imgs) - 1)]},
+			{'type': 'callback', 'texts':[''], 'callbacks':[min(index + 1, len(tree.form.stages[2].imgs) - 1)]},
 			{'type': 'callback', 'texts':[''], 'callbacks':[index]},
 		]
 		keyboard = create_keyboard(tree.form.stages[2].buttons, currentInlineState)
