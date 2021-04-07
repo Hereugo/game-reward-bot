@@ -77,10 +77,10 @@ def menu(message):
 @bot.message_handler(func=lambda m: True)
 def receiver(message):
 	print('I received your message just cant say that')
-	print(tempMem['function_name'])
+	print(tempMem)
 	if tempMem['function_name'] != '#':
 		[query, values] = calc(tempMem['function_name'])
-		tempMem['function_name'] = '#'
+		tempMem.update(function_name='#')
 
 		possibles = globals().copy()
 		possibles.update(locals())
@@ -96,25 +96,23 @@ def form(message, values):
 	print(message, userId, values, 'HERE!!!!!!!!!!!!!!!!!!!!!!!!!')
 	# values to store
 	if values[2] == 'name':
-		tempMem['name'] = message.text
+		tempMem.update(name=message.text)
 	elif values[2] == 'check':
 		if message.content_type != 'photo':
 			msg = bot.send_message(userId, tree.form.stages[1].text[1])
-			tempMem['function_name'] = 'form?2,0,check'
+			tempMem.update(function_name='form?2,0,check')
 			return
-		tempMem['photo_check'] = message.message_id
+		tempMem.update(photo_check=message.message_id)
 	elif values[2] == 'toy_choice':
-		tempMem['toy_choice'] = int(values[1])
+		tempMem.update(toy_choice=int(values[1]))
 
 	print(tempMem, tempMem['function_name'])
 	if stage == '0': # Get name and surname
-		msg = bot.send_message(userId, tree.form.stages[0].text)
-		tempMem['function_name'] = 'form?1,#,name'
-
+		bot.send_message(userId, tree.form.stages[0].text)
+		tempMem.update(function_name='form?1,#,name')
 	elif stage == '1': # Get check photo
-		msg = bot.send_message(userId, tree.form.stages[1].text[0])
-		tempMem['function_name'] = 'form?2,0,check'
-
+		bot.send_message(userId, tree.form.stages[1].text[0])
+		tempMem.update(function_name='form?2,0,check')
 	elif stage == '2': # Get toy choice
 		index = int(values[1])
 		currentInlineState = [
