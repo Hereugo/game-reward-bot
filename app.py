@@ -100,20 +100,20 @@ def form(message, values):
 	elif values[2] == 'check':
 		if message.content_type != 'photo':
 			msg = bot.send_message(userId, tree.form.stages[1].text[1])
-			tempMem['functoin_name'] = 'form?2,0,check'
+			tempMem['function_name'] = 'form?2,0,check'
 			return
 		tempMem['photo_check'] = message.message_id
 	elif values[2] == 'toy_choice':
 		tempMem['toy_choice'] = int(values[1])
 
-	print(tempMem, function_name)
+	print(tempMem, tempMem['function_name'])
 	if stage == '0': # Get name and surname
 		msg = bot.send_message(userId, tree.form.stages[0].text)
-		tempMem['functoin_name'] = 'form?1,#,name'
+		tempMem['function_name'] = 'form?1,#,name'
 
 	elif stage == '1': # Get check photo
 		msg = bot.send_message(userId, tree.form.stages[1].text[0])
-		tempMem['functoin_name'] = 'form?2,0,check'
+		tempMem['function_name'] = 'form?2,0,check'
 
 	elif stage == '2': # Get toy choice
 		index = int(values[1])
