@@ -94,7 +94,7 @@ def receiver(message):
 def form(message, values):
 	userId = message.chat.id
 	stage = values[0]
-	print(message, userId, values, 'HERE!!!!!!!!!!!!!!!!!!!!!!!!!')
+	print(message, userId, values, tempMem, 'HERE!!!!!!!!!!!!!!!!!!!!!!!!!')
 	# values to store
 	if values[2] == 'name':
 		tempMem.update(name=message.text)
