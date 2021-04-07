@@ -77,9 +77,10 @@ def menu(message):
 @bot.message_handler(func=lambda m: True)
 def receiver(message):
 	print('I received your message just cant say that')
-	print(tempMem)
+	print(tempMem, tempMem['function_name'])
 	if tempMem['function_name'] != '#':
 		[query, values] = calc(tempMem['function_name'])
+		print(query, values)
 		tempMem.update(function_name='#')
 
 		possibles = globals().copy()
@@ -106,7 +107,7 @@ def form(message, values):
 	elif values[2] == 'toy_choice':
 		tempMem.update(toy_choice=int(values[1]))
 
-	print(tempMem, tempMem['function_name'])
+	print(tempMem)
 	if stage == '0': # Get name and surname
 		bot.send_message(userId, tree.form.stages[0].text)
 		tempMem.update(function_name='form?1,#,name')
