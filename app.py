@@ -74,10 +74,11 @@ def menu(message):
 ## <============================ FORM ====================================>
 
 
-@bot.message_handler(func=lambda m: True)
+@bot.message_handler(content_types = ['text', 'photo'])
 def receiver(message):
 	print('I received your message just cant say that')
-	print(tempMem, tempMem['function_name'])
+	print(tempMem)
+	print(message)
 	if tempMem['function_name'] != '#':
 		[query, values] = calc(tempMem['function_name'])
 		print(query, values)
