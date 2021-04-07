@@ -47,7 +47,6 @@ def webhook():
 def create_keyboard(arr, vals):
 	keyboard = InlineKeyboardMarkup()
 	i = 0
-	print(vals)
 	for lst in arr:
 		buttons = []
 		for button in lst:
@@ -125,13 +124,18 @@ def form(message, values):
 		users.update_one({'_id': userId}, {'$set': {'function_name': 'form?2,0,check'}})
 	elif stage == '2': # Get toy choice
 		index = int(values[1])
+		print(index)
 		currentInlineState = [
 			{'type': 'callback', 'texts':[''], 'callbacks':[max(index - 1, 0)]},
 			{'type': 'callback', 'texts':[''], 'callbacks':[min(index + 1, len(tree.form.stages[2].imgs) - 1)]},
 			{'type': 'callback', 'texts':[''], 'callbacks':[index]},
 		]
 		keyboard = create_keyboard(tree.form.stages[2].buttons, currentInlineState)
-		bot.send_message(userId, tree.form.stages[2].text, reply_markup=keyboard)
+
+		bot.send_photo(chat_id=userId, 
+					   photo=tree.form.stages[2].imgs[index], 
+					   caption=tree.form.stages[2].text,
+					   reply_markup=keyboard)
 	elif stage == '3': # Show selected things		
 		bot.send_photo(chat_id=userId, photo=tree.form.stages[2].imgs[user['toy_choice']]) # Toy choice
 		bot.forward_message(userId, userId, user['photo_check'])						# Check
