@@ -6,8 +6,11 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, InputMedia
 
 from config import *
 from flask import Flask, jsonify, request
+from flask_pymongo import PyMongo
 
 app = Flask(__name__)
+cluster = PyMongo(app, uri=URI)
+users = cluster.db.user
 
 bot = telebot.TeleBot(TOKEN)
 
@@ -18,10 +21,6 @@ keyFormat = {
 	'callbacks': [''],
 	'urls': [],
 }
-
-
-tempMem = {}
-tempMem['function_name'] = '#'
 
 @app.route('/'+TOKEN, methods=['POST'])
 def getMessage():
@@ -67,6 +66,15 @@ def create_keyboard(arr, vals):
 @bot.message_handler(commands=['start'])
 def menu(message):
 	userId = message.chat.id
+	if users.find_one({'_id': userId}) == None:
+		users.insert_one({
+			'_id': userId,
+			'name': "#",
+			'toy_choice': 0,
+			'photo_check': -1,
+			'function_name': '#'
+		})
+
 	currentInlineState = [keyFormat, keyFormat, keyFormat, keyFormat]
 	keyboard = create_keyboard(tree.menu.buttons, currentInlineState)
 	bot.send_message(userId, tree.menu.text, reply_markup=keyboard)
@@ -76,45 +84,45 @@ def menu(message):
 
 @bot.message_handler(content_types = ['text', 'photo'])
 def receiver(message):
-	print('I received your message just cant say that')
-	print(tempMem)
-	print(message)
-	if tempMem['function_name'] != '#':
-		[query, values] = calc(tempMem['function_name'])
-		print(query, values)
-		tempMem.update(function_name='#')
+	userId = message.chat.id
+	user = users.find_one({'_id': userId})
+	if user['function_name'] != '#':
+		[query, values] = calc(user['function_name'])
+		users.update_one({'_id': userId}, {'$set': {'function_name': '#'}})
 
+		print(query, values)
 		possibles = globals().copy()
 		possibles.update(locals())
 		method = possibles.get(query)
-		if values == -1:
-			method(message)
-		else:
-			method(message, values)
+
+		method(message, values)
+	else:
+		bot.send_message(userId, TEMPLATE_MESSAGE)
 
 def form(message, values):
 	userId = message.chat.id
 	stage = values[0]
-	print(message, userId, values, tempMem, 'HERE!!!!!!!!!!!!!!!!!!!!!!!!!')
+	print(message, userId, values)
 	# values to store
 	if values[2] == 'name':
-		tempMem.update(name=message.text)
+		users.update_one({'_id': userId}, {'$set': {'name': message.text}})
 	elif values[2] == 'check':
 		if message.content_type != 'photo':
 			msg = bot.send_message(userId, tree.form.stages[1].text[1])
-			tempMem.update(function_name='form?2,0,check')
+			users.update_one({'_id': userId}, {'$set': {'function_name': 'form?2,0,check'}})
 			return
-		tempMem.update(photo_check=message.message_id)
+		users.update_one({'_id': userId}, {'$set': {'photo_check': message.message_id}})
 	elif values[2] == 'toy_choice':
-		tempMem.update(toy_choice=int(values[1]))
+		users.update_one({'_id': userId}, {'$set': {'toy_choice': int(values[1])}})
 
-	print(tempMem)
+	user = users.find_one({'_id': userId})
+
 	if stage == '0': # Get name and surname
 		bot.send_message(userId, tree.form.stages[0].text)
-		tempMem.update(function_name='form?1,#,name')
+		users.update_one({'_id': userId}, {'$set': {'function_name': 'form?1,#,name'}})
 	elif stage == '1': # Get check photo
 		bot.send_message(userId, tree.form.stages[1].text[0])
-		tempMem.update(function_name='form?2,0,check')
+		users.update_one({'_id': userId}, {'$set': {'function_name': 'form?2,0,check'}})
 	elif stage == '2': # Get toy choice
 		index = int(values[1])
 		currentInlineState = [
@@ -125,12 +133,12 @@ def form(message, values):
 		keyboard = create_keyboard(tree.form.stages[2].buttons, currentInlineState)
 		bot.send_message(userId, tree.form.stages[2].text, reply_markup=keyboard)
 	elif stage == '3': # Show selected things		
-		bot.send_photo(chat_id=userId, photo=tree.form.stages[2].imgs[tempMem['toy_choice']]) # Toy choice
-		bot.forward_message(userId, userId, tempMem['photo_check'])						# Check
+		bot.send_photo(chat_id=userId, photo=tree.form.stages[2].imgs[user['toy_choice']]) # Toy choice
+		bot.forward_message(userId, userId, user['photo_check'])						# Check
 
 		currentInlineState = [keyFormat, keyFormat]										# Confirmation message
 		keyboard = create_keyboard(tree.form.stages[3].buttons, currentInlineState)
-		bot.send_message(userId, tree.form.stages[3].text.format(tempMem['name']), reply_markup=keyboard)
+		bot.send_message(userId, tree.form.stages[3].text.format(user['name']), reply_markup=keyboard)
 	elif stage == '4': # Confirmed
 		currentInlineState = [keyFormat]
 		keyboard = create_keyboard(tree.form.stages[4].buttons, currentInlineState)
