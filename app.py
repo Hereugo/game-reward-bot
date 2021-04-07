@@ -86,7 +86,7 @@ def receiver(message):
 		possibles = globals().copy()
 		possibles.update(locals())
 		method = possibles.get(query)
-		if value == -1:
+		if values == -1:
 			method(message)
 		else:
 			method(message, values)
