@@ -194,9 +194,15 @@ def confirm(message, values):
 ## <======================== CONDITIONS ==================================>
 def сonditions(message):
 	userId = message.chat.id
-	currentInlineState = [keyFormat]
+	currentInlineState = [keyFormat, keyFormat]
 	keyboard = create_keyboard(tree.сonditions.buttons, currentInlineState)
 	bot.send_message(userId, tree.сonditions.text, reply_markup=keyboard)
+
+def list_partners(message):
+	userId = message.chat.id
+	currentInlineState = [keyFormat]
+	keyboard = create_keyboard(tree.list_partners.buttons, currentInlineState)
+	bot.send_message(userId, tree.list_partners.text, reply_markup=keyboard)
 ## <======================================================================>
 
 
