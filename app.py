@@ -79,8 +79,6 @@ def menu(message):
 	bot.send_message(userId, tree.menu.text, reply_markup=keyboard)
 
 ## <============================ FORM ====================================>
-
-
 @bot.message_handler(content_types = ['text', 'photo'])
 def receiver(message):
 	userId = message.chat.id
@@ -100,54 +98,66 @@ def receiver(message):
 
 def form(message, values):
 	userId = message.chat.id
-	stage = values[0]
+	stage = int(values[0])
 	print(message, userId, values)
 	# values to store
 	if values[2] == 'name':
-		users.update_one({'_id': userId}, {'$set': {'name': message.text}})
-	elif values[2] == 'check':
-		if message.content_type != 'photo':
-			bot.send_message(userId, tree.form.stages[1].text[1])
-			users.update_one({'_id': userId}, {'$set': {'function_name': 'form?2,0,check'}})
-			return
-		users.update_one({'_id': userId}, {'$set': {'photo_check': message.message_id}})
+		users.update_one({'_id': userId}, {'$set': {values[2]: message.text}})
+	elif values[2] == 'address':
+		users.update_one({'_id': userId}, {'$set': {values[2]: message.text}})
+	elif values[2] == 'phone':
+		users.update_one({'_id': userId}, {'$set': {values[2]: message.text}})
 	elif values[2] == 'toy_choice':
-		users.update_one({'_id': userId}, {'$set': {'toy_choice': int(values[1])}})
+		users.update_one({'_id': userId}, {'$set': {values[2]: message.text}})
+	elif values[2] == 'photo_check':
+		if message.content_type != 'photo':
+			bot.send_message(userId, tree.form.stages[stage-1].text[1])
+			users.update_one({'_id': userId}, {'$set': {'function_name': 'form?4,0,check'}})
+			return
+		users.update_one({'_id': userId}, {'$set': {values[2]: message.message_id}})
+
 
 	user = users.find_one({'_id': userId})
-
-	if stage == '0': # Get name and surname
-		bot.send_message(userId, tree.form.stages[0].text)
+	if stage == 0: # Get name 
+		bot.send_message(userId, tree.form.stages[stage].text)
 		users.update_one({'_id': userId}, {'$set': {'function_name': 'form?1,#,name'}})
-	elif stage == '1': # Get check photo
-		bot.send_message(userId, tree.form.stages[1].text[0])
-		users.update_one({'_id': userId}, {'$set': {'function_name': 'form?2,0,check'}})
-	elif stage == '2': # Get toy choice
+	elif stage == 1: # Get address
+		bot.send_message(userId, tree.form.stages[stage].text)
+		users.update_one({'_id': userId}, {'$set': {'function_name': 'form?2,#,address'}})
+	elif stage == 2: # Get phone number
+		bot.send_message(userId, tree.form.stages[stage].text)
+		users.update_one({'_id': userId}, {'$set': {'function_name': 'form?3,#,phone'}})
+	elif stage == 3: # Get check photo
+		bot.send_message(userId, tree.form.stages[stage].text[0])
+		users.update_one({'_id': userId}, {'$set': {'function_name': 'form?4,0,check'}})
+	elif stage == 4: # Get toy choice
 		index = int(values[1])
 		print(index)
 		currentInlineState = [
 			{'type': 'callback', 'texts':[''], 'callbacks':[max(index - 1, 0)]},
-			{'type': 'callback', 'texts':[''], 'callbacks':[min(index + 1, len(tree.form.stages[2].imgs) - 1)]},
+			{'type': 'callback', 'texts':[''], 'callbacks':[min(index + 1, len(tree.form.stages[stage].imgs) - 1)]},
 			{'type': 'callback', 'texts':[''], 'callbacks':[index]},
 		]
-		keyboard = create_keyboard(tree.form.stages[2].buttons, currentInlineState)
+		keyboard = create_keyboard(tree.form.stages[stage].buttons, currentInlineState)
 
 		bot.send_photo(chat_id=userId, 
-					   photo=tree.form.stages[2].imgs[index], 
+					   photo=tree.form.stages[stage].imgs[index], 
 					   caption=tree.form.stages[2].text,
 					   reply_markup=keyboard)
-	elif stage == '3': # Show selected things		
-		bot.send_photo(chat_id=userId, photo=tree.form.stages[2].imgs[user['toy_choice']]) # Toy choice
-		bot.forward_message(userId, userId, user['photo_check'])						# Check
+	elif stage == 5: # Show selected things		
+		bot.send_photo(chat_id=userId, photo=tree.form.stages[4].imgs[user['toy_choice']])  # Toy choice
+		bot.forward_message(userId, userId, user['photo_check'])		 					# Check
 
-		currentInlineState = [keyFormat, keyFormat]										# Confirmation message
-		keyboard = create_keyboard(tree.form.stages[3].buttons, currentInlineState)
-		bot.send_message(userId, tree.form.stages[3].text.format(user['name']), reply_markup=keyboard)
-	elif stage == '4': # Confirmed
+		currentInlineState = [keyFormat, keyFormat]											# Confirmation message
+		keyboard = create_keyboard(tree.form.stages[stage].buttons, currentInlineState)
+		bot.send_message(userId, tree.form.stages[stage].text.format(user['name'], user['address'], user['phone']), reply_markup=keyboard)
+	elif stage == 6: # Confirmed
 		currentInlineState = [keyFormat]
-		keyboard = create_keyboard(tree.form.stages[4].buttons, currentInlineState)
-		bot.send_message(userId, tree.form.stages[4].text, reply_markup=keyboard)
+		keyboard = create_keyboard(tree.form.stages[stage].buttons, currentInlineState)
+		bot.send_message(userId, tree.form.stages[stage].text, reply_markup=keyboard)
 
+
+		# Send photo of a receipt to channel for confirmation
 		bot.forward_message(groupChatId, userId, user['photo_check'])
 		currentInlineState = [{'type': 'callback', 'texts':[''], 'callbacks':[userId]},
 							  {'type': 'callback', 'texts':[''], 'callbacks':[userId]}]
