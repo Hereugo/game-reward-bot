@@ -169,10 +169,10 @@ def confirm(message, values):
 		text = 'Одобрит'
 		bot.send_message(values[1], tree.confirm.text[1])
 
-		user = users.find_one({'_id': values[1]})
-		bot.send_photo(chat_id=groupChatId,
-					   photo=gifts[int(user['toy_choice'])],
-					   caption=tree.confirm.text[3].format(user['name'], user['address'], user['phone'], user['username']))
+	user = users.find_one({'_id': values[1]})
+	bot.send_photo(chat_id=groupChatId,
+				   photo=gifts[int(user['toy_choice'])],
+				   caption=tree.confirm.text[3].format(user['name'], user['address'], user['phone'], user['username']))
 	bot.send_message(groupChatId, tree.confirm.text[2].format(text))
 ## <======================================================================>
 
