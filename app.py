@@ -91,7 +91,7 @@ def form(message, values):
 			return
 		else:
 			users.update_one({'_id': userId}, {'$set': {values[1]: message.message_id}})
-	else values[1] != '#':
+	elif values[1] != '#':
 		users.update_one({'_id': userId}, {'$set': {values[1]: message.text}})
 
 
