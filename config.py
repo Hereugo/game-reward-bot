@@ -183,10 +183,6 @@ tree = Map({
 				{
 					'text': 'Мне также понадобится проверить твой чек🔍🛒🛍👀, отправь пожалуйста четкое фото 📸🗞',
 					'next_step': 'form?4,photo_check',
-				},
-				{
-					'text': 'Фото чека плиз!😂😂🙏🙏',
-					'next_step': 'form?4,photo_check',
 				}
 			],
 			[
@@ -212,6 +208,10 @@ tree = Map({
 					],
 					'prize': True,
 				},
+				{
+					'text': 'Фото чека плиз!😂😂🙏🙏',
+					'next_step': 'form?4,photo_check',
+				}
 			],
 			[
 				{
