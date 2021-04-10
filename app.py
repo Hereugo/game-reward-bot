@@ -94,9 +94,11 @@ def form(message, values):
 	elif values[1] != '#':
 		users.update_one({'_id': userId}, {'$set': {values[1]: message.text}})
 
-
+	print(gifts)
 	if 'buttons' in phase[0]:
+		print('Good1')
 		if 'prize' in phase[0]:
+			print('Good2')
 			index = int(values[2])
 			currentInlineState = [
 				{'type': 'callback', 'texts':[''], 'callbacks':[max(index - 1, 0)]},
@@ -105,7 +107,7 @@ def form(message, values):
 			]
 		else:
 			currentInlineState = [keyFormat, keyFormat]
-
+		print(index)
 		keyboard = create_keyboard(phase[0].buttons, currentInlineState)
 		
 		if 'prize' in phase[0]:
