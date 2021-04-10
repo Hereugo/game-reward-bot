@@ -8,9 +8,8 @@ TEMPLATE_MESSAGE = 'Напиши /start для разбудить меня... �
 
 
 gifts = [
-	Image.open('./images/spongebob_toy.png'),
-	Image.open('./images/cars_toy.png'),
-	Image.open('./images/fox_toy.png')
+	Image.open('./images/girls_lol.png'),
+	Image.open('./images/boys_cars.png')
 ]
 tree = Map({
 	'menu': {
@@ -154,7 +153,7 @@ tree = Map({
 			'Извини, но с твоим чеком что-то не то 😢',
 			'Твой чек успешно подтверждён! Ждите звонка нашего курьера 📞! До свидания! 👋',
 			'Пользователь был {}',
-			'ДАННЫЕ О ПОЛЬЗОВАТЕЛЕ: Имя:{}\nАдрес:{}\nТелефон:{}\n',
+			'ДАННЫЕ О ПОЛЬЗОВАТЕЛЕ:\n\n Имя: {}\nАдрес: {}\nТелефон: {}\n',
 		],
 	},
 
