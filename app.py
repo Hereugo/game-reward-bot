@@ -83,11 +83,11 @@ def form(message, values):
 	userId = message.chat.id
 	stageId = int(values[0])
 	phase = tree.form.stages[stageId]
-
+	print(phase, message)
 	if values[1] == 'photo_check':
 		if message.content_type != 'photo':
 			bot.send_message(userId, phase[1].text)
-			users.update_one({'_id': userId}, {'$set': {'function_name': 'form?3,#'}})
+			users.update_one({'_id': userId}, {'$set': {'function_name': phase[1].next_step}})
 			return
 		else:
 			users.update_one({'_id': userId}, {'$set': {values[1]: message.message_id}})
