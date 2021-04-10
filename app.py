@@ -168,10 +168,10 @@ def confirm(message, values):
 	values[1] = int(values[1])
 
 	if values[0] == 'no':
-		text = 'Отвергнут'
+		text = 'Отвергнут ❌'
 		bot.send_message(values[1], tree.confirm.text[0])
 	elif values[0] == 'yes':
-		text = 'Одобрит'
+		text = 'Одобрит ✅'
 		bot.send_message(values[1], tree.confirm.text[1])
 
 	user = users.find_one({'_id': values[1]})
