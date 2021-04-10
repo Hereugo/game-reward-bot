@@ -135,7 +135,12 @@ def form_complete(message, values):
 	currentInlineState = [{'type':'callback', 'texts':[''], 'callbacks':[userId]},
 						  {'type':'callback', 'texts':[''], 'callbacks':[userId]}]
 	keyboard = create_keyboard(tree.confirmation.buttons, currentInlineState)
-	bot.send_message(groupChatId, tree.confirmation.text.format(message.chat.username), reply_markup=keyboard)
+
+
+	bot.send_photo(chat_id=groupChatId,
+				   photo=gifts[int(user['toy_choice'])],
+				   caption=tree.confirm.text[3].format(user['name'], user['address'], user['phone'], user['username']),
+				   reply_markup=keyboard)
 ## <======================================================================>
 
 
