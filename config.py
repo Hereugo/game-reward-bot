@@ -186,7 +186,7 @@ tree = Map({
 				},
 				{
 					'text': 'Фото чека плиз!😂😂🙏🙏',
-					'next_step': 'form?3',
+					'next_step': 'form?4,photo_check',
 				}
 			],
 			[
@@ -196,11 +196,11 @@ tree = Map({
 						[
 							{
 								'text': '<',
-								'callback': 'form?4,{}'
+								'callback': 'form?4,#,{}'
 							},
 							{
 								'text': '>',
-								'callback': 'form?4,{}',
+								'callback': 'form?4,#,{}',
 							}
 						],
 						[

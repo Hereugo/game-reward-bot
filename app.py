@@ -87,7 +87,7 @@ def form(message, values):
 	if values[1] == 'photo_check':
 		if message.content_type != 'photo':
 			bot.send_message(userId, phase[1].text)
-			users.update_one({'_id': userId}, {'$set': {'function_name': phase[1].next_step}})
+			users.update_one({'_id': userId}, {'$set': {'function_name': 'form?3,#'}})
 			return
 		else:
 			users.update_one({'_id': userId}, {'$set': {values[1]: message.message_id}})
