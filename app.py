@@ -96,26 +96,21 @@ def form(message, values):
 
 	print(gifts)
 	if 'buttons' in phase[0]:
-		print('Good1')
 		if 'prize' in phase[0]:
-			print('Good2')
 			index = int(values[2])
 			currentInlineState = [
 				{'type': 'callback', 'texts':[''], 'callbacks':[max(index - 1, 0)]},
 				{'type': 'callback', 'texts':[''], 'callbacks':[min(index + 1, len(gifts) - 1)]},
 				{'type': 'callback', 'texts':[''], 'callbacks':[index]},
 			]
+			keyboard = create_keyboard(phase[0].buttons, currentInlineState)
+			bot.send_photo(chat_id=userId,
+						   photo=gifts[index],
+						   caption=phase[0].text,
+						   reply_markup=keyboard)
 		else:
 			currentInlineState = [keyFormat, keyFormat]
-		print(index)
-		keyboard = create_keyboard(phase[0].buttons, currentInlineState)
-		
-		if 'prize' in phase[0]:
-			bot.send_photo(chat_id=userId,
-			   photo=gifts[index],
-			   caption=phase[0].text,
-			   reply_markup=keyboard)
-		else:
+			keyboard = create_keyboard(phase[0].buttons, currentInlineState)
 			bot.send_message(userId, phase[0].text, reply_markup=keyboard)
 	else:
 		bot.send_message(userId, phase[0].text)
