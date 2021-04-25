@@ -161,6 +161,30 @@ def list_games(message, value):
 ## <======================================================================>
 
 
+## <======================== LIST GIFTS ==================================>
+def list_gifts(message, value):
+	userId = message.chat.id
+	value = int(value[0])
+
+	currentInlineState = [{'type':'callback', 'texts':[''], 'callbacks':[max(value - 1, 0)]}, 
+						  {'type':'callback', 'texts':[''], 'callbacks':[value]}, 
+						  {'type':'callback', 'texts':[''], 'callbacks':[min(value + 1, len(tree.list_gifts.messages) - 1)]},
+						  keyFormat]
+	keyboard = create_keyboard(tree.list_gifts.buttons, currentInlineState)
+	bot.send_photo(chat_id=userId,
+				   photo=tree.list_gifts.messages[value].image,
+				   reply_markup=keyboard)
+def list_gifts2(message, value):
+	userId = message.chat.id
+	value = int(value[0])
+	currentInlineState = [keyFormat, keyFormat]
+	keyboard = create_keyboard(tree.list_gifts2.buttons, currentInlineState)
+	bot.send_photo(chat_id=userId,
+				   photo=tree.list_gifts.messages[value].image,
+				   reply_markup=keyboard)
+## <======================================================================>
+
+
 
 ## <====================== CONFIRMATION ==================================>
 def confirm(message, values):

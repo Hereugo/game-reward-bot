@@ -1,6 +1,7 @@
 from functions import Map 
 from PIL import Image
-TOKEN = '1724144036:AAHUrJz65gV8AkoTp5UIou8roCA3dqnSuzs'
+# TOKEN = '1724144036:AAHUrJz65gV8AkoTp5UIou8roCA3dqnSuzs'
+TOKEN = '1272925344:AAGArvS0kwYUB8W0wL3EufrsGn8kNRGar9w'
 URL = 'https://work-dad.herokuapp.com/'
 URI = 'mongodb+srv://Amir:2LSCfSNcwAz9x3!@cluster0.jxsw1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 
@@ -15,6 +16,12 @@ tree = Map({
 	'menu': {
 		'text': 'Привет!😀 Только у нас дети 👼 получают подарки 🎁 играя в любимые игры! 🎮',
 		'buttons': [
+			[
+				{
+					'text': 'Выбрать подарок! 🎁',
+					'callback': 'list_gifts?0',
+				},
+			],
 			[
 				{
 					'text': 'Выбрать игру! 🎮',
@@ -34,6 +41,54 @@ tree = Map({
 				},
 			]
 		],
+	},
+	'list_gifts': {
+		'messages': [
+			{
+				'image': gifts[0],
+			},
+			{
+				'image': gifts[1],
+			},
+		],
+		'buttons': [
+			[
+				{
+					'text': '<',
+					'callback': 'list_gifts?{}',
+				},
+				{
+					'text': 'Хочу это!',
+					'callback': 'list_gifts2?{}',
+				},
+				{
+					'text': '>',
+					'callback': 'list_gifts?{}'
+				}
+			],
+			[
+				{
+					'text': 'Назад 🏘',
+					'callback': 'menu',
+				}
+			],
+		]
+	},
+	'list_gifts2': {
+		'buttons': [
+			[
+				{
+					'text': 'Выбрать игру! 🎮',
+					'callback': 'list_games?0',
+				},
+			],
+			[
+				{
+					'text': 'Назад 🏘',
+					'callback': 'menu',
+				}
+			],
+		]
 	},
 	'list_games': {
 		'messages': [
