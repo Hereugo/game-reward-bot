@@ -1,7 +1,6 @@
 from functions import Map 
 from PIL import Image
 TOKEN = '1724144036:AAHUrJz65gV8AkoTp5UIou8roCA3dqnSuzs'
-# TOKEN = '1272925344:AAGArvS0kwYUB8W0wL3EufrsGn8kNRGar9w'
 URL = 'https://work-dad.herokuapp.com/'
 URI = 'mongodb+srv://Amir:2LSCfSNcwAz9x3!@cluster0.jxsw1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 
