@@ -1,5 +1,6 @@
 import re
 import os
+import time
 
 import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, InputMediaPhoto
@@ -7,6 +8,10 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, InputMedia
 from config import *
 from flask import Flask, jsonify, request
 from flask_pymongo import PyMongo
+
+from datetime import datetime
+from pytz import timezone
+import pytz
 
 app = Flask(__name__)
 cluster = PyMongo(app, uri=URI)
@@ -66,9 +71,16 @@ def create_keyboard(arr, vals):
 def menu(message):
 	userId = message.chat.id
 	if users.find_one({'_id': userId}) == None:
+
+		kz = timezone('Asia/Almaty')
+		ts = time.time()
+		utc_now = datetime.utcfromtimestamp(ts)
+		local_now = utc_now.replace(tzinfo=pytz.utc).astimezone(kz)
+		print(local_now, str(local_now))
 		users.insert_one({
 			'_id': userId,
 			'username': message.chat.username,
+			'date': str(local_now),
 			'name': "#",
 			'toy_choice': 0,
 			'photo_check': -1,
@@ -176,7 +188,13 @@ def list_gifts(message, value):
 				   reply_markup=keyboard)
 def list_gifts2(message, value):
 	userId = message.chat.id
+
+	user = users.find_one({'_id': userId})
 	value = int(value[0])
+	if not 'sticker' in user:
+		users.update_one({'_id': userId}, {'$set': {'sticker': gifts_names[value]}})
+
+
 	currentInlineState = [keyFormat, keyFormat]
 	keyboard = create_keyboard(tree.list_gifts2.buttons, currentInlineState)
 	bot.send_photo(chat_id=userId,
