@@ -11,6 +11,7 @@ Jinja2==2.11.3
 MarkupSafe==1.1.1
 Pillow==8.2.0
 pymongo==3.11.3
+pytz==2021.1
 pyTelegramBotAPI==3.7.7
 requests==2.25.1
 urllib3==1.26.4
