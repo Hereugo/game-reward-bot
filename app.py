@@ -250,7 +250,7 @@ def ask_question(message):
 	userId = message.chat.id
 	currentInlineState = [keyFormat, keyFormat]
 	keyboard = create_keyboard(tree.ask_question.buttons, currentInlineState)
-	bot.send_message(userid, tree.ask_question.text, reply_markup=keyboard)
+	bot.send_message(userId, tree.ask_question.text, reply_markup=keyboard)
 
 def question(message):
 	userId = message.chat.id
