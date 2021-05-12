@@ -230,7 +230,11 @@ def сonditions(message):
 	userId = message.chat.id
 	currentInlineState = [keyFormat, keyFormat]
 	keyboard = create_keyboard(tree.сonditions.buttons, currentInlineState)
-	bot.send_message(userId, tree.сonditions.text, reply_markup=keyboard)
+
+	bot.send_photo(chat_id=userId, 
+				   photo=tree.сonditions.image, 
+				   caption=tree.сonditions.text, 
+				   reply_markup=keyboard)
 
 def list_partners(message):
 	userId = message.chat.id
@@ -246,11 +250,8 @@ def ask_question(message):
 	userId = message.chat.id
 	currentInlineState = [keyFormat, keyFormat]
 	keyboard = create_keyboard(tree.ask_question.buttons, currentInlineState)
+	bot.send_message(userid, tree.ask_question.text, reply_markup=keyboard)
 
-	bot.send_photo(chat_id=userId,
-				   photo=tree.ask_question.image,
-				   caption=tree.ask_question.text,
-				   reply_markup=keyboard)
 def question(message):
 	userId = message.chat.id
 	currentInlineState = [keyFormat]
