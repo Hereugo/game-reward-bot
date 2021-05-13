@@ -91,6 +91,17 @@ def menu(message):
 	keyboard = create_keyboard(tree.menu.buttons, currentInlineState)
 	bot.send_message(userId, tree.menu.text, reply_markup=keyboard)
 
+@bot.message_handler(commands=['send'])
+def send(message):
+	userId = message.chat.id
+	if userId == 818110962:
+		arr = users.find()
+		for x in arr:
+			if x['_id'] == userId:
+				bots.send_message(x['_id'], 'Спасибо что играли, для получения подарков нужны чеки партнеров, смотрите условия получения подарка')
+	else:
+		return
+
 ## <============================ FORM ====================================>
 def form(message, values):
 	userId = message.chat.id
