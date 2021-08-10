@@ -19,7 +19,7 @@ users = cluster.db.user
 
 bot = telebot.TeleBot(TOKEN)
 
-groupChatId = '@H_reug0'
+groupChatId = ''
 keyFormat = {
 	'type': 'callback',
 	'texts': [''],
